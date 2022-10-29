@@ -10,9 +10,9 @@ entity "Users" as e01 {
 entity "Emails" as e02 {
   *email_id : long <<generated>>
   --
-  email_sender_id : integer
+  email_sender_id : long
   email_title : String
-  email_content : String
+  email_content : text
   create_date : timestamp
   send_date : timestamp
   send_yn : boolean
