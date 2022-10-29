@@ -1,0 +1,22 @@
+@startuml
+entity "Users" as e01 {
+  *user_id : long <<generated>>
+  --
+  user_email : String
+  join_date : timestamp
+  update_date : timestamp
+}
+
+entity "Emails" as e02 {
+  *email_id : long <<generated>>
+  --
+  email_sender_id : integer
+  email_title : String
+  email_content : String
+  create_date : timestamp
+  send_date : timestamp
+  send_yn : boolean
+}
+
+e01 --{ e02
+@enduml
