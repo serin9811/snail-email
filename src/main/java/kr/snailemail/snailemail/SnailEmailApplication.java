@@ -8,6 +8,6 @@ public class SnailEmailApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SnailEmailApplication.class, args);
-	}
+    }
 
 }
