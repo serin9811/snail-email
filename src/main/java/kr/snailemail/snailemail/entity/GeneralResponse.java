@@ -1,8 +1,12 @@
 package kr.snailemail.snailemail.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
 @NoArgsConstructor
 public class GeneralResponse <T> {
     private boolean status;

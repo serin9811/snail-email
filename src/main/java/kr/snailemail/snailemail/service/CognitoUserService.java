@@ -29,7 +29,7 @@ public class CognitoUserService {
         .credentialsProvider(ProfileCredentialsProvider.create())
         .build();
 
-    public GeneralResponse getUsers() {
+    public GeneralResponse<?> getUsers() {
         try {
              ListUsersRequest request = ListUsersRequest.builder().userPoolId(userPoolId).build();
              ListUsersResponse response = cognitoClient.listUsers(request);
