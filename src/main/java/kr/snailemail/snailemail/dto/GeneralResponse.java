@@ -1,4 +1,4 @@
-package kr.snailemail.snailemail.entity;
+package kr.snailemail.snailemail.dto;
 
 import lombok.Builder;
 import lombok.Getter;
