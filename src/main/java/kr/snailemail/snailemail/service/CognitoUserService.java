@@ -19,14 +19,17 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersRe
 @Service
 public class CognitoUserService {
 
-    private UserRepository userRepository;
-    
+    //private UserRepository userRepository;
+
     @Value("${aws.cognito.userPoolId}")
     private String userPoolId;
 
+    /*
     public CognitoUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+     */
     
     CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
         .region(Region.AP_NORTHEAST_2)
@@ -36,48 +39,58 @@ public class CognitoUserService {
     public GeneralResponse<?> getUsers() {
         try {
              ListUsersRequest request = ListUsersRequest.builder().userPoolId(userPoolId).build();
+
              ListUsersResponse response = cognitoClient.listUsers(request);
+
              response.users().forEach(user -> {System.out.println("user : " + user.username());
              });
+
              return GeneralResponse.builder()
                  .status(true)
                  .message("success")
-                 .data(response.users())
+                 .data(response.users().toArray())
                  .build();
+
         } catch (CognitoIdentityProviderException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
         }
         return GeneralResponse.builder()
             .status(false)
-            .message("fail")
+            .message("fail to get user list")
             .data(null)
             .build();
     }
     
     public GeneralResponse<?> registerUser(SignUpUserDto request) {
-     try {
-        AttributeType attributeType = AttributeType.builder().name("email").value(request.getUserEmail()).build();
+        try {
+            AttributeType attributeType = AttributeType.builder()
+                    .name("email")
+                    .value(request.getUserEmail())
+                    .build();
 
-        AdminCreateUserRequest req = AdminCreateUserRequest.builder().userPoolId(userPoolId).username(request.getUserEmail()).userAttributes(attributeType).messageAction("SUPPRESS").build();
+            AdminCreateUserRequest req = AdminCreateUserRequest.builder()
+                    .userPoolId(userPoolId)
+                    .username(request.getUserEmail())
+                    .userAttributes(attributeType)
+                    .messageAction("SUPPRESS")
+                    .build();
 
-        AdminCreateUserResponse res = cognitoClient.adminCreateUser(req);
+            AdminCreateUserResponse res = cognitoClient.adminCreateUser(req);
+            System.out.println("user : " + res.user().username());
 
-        System.out.println("user : " + res.user().username());
-        
+            return GeneralResponse.builder()
+                .status(true)
+                .message("success")
+                .data(res.user().username())
+                .build();
+        } catch (CognitoIdentityProviderException e) {
+            System.err.println(e.awsErrorDetails().errorMessage());}
+
         return GeneralResponse.builder()
-            .status(true)
-            .message("success")
-            .data(res.user().username())
-            .build();
-
-     } catch (CognitoIdentityProviderException e) {
-         System.err.println(e.awsErrorDetails().errorMessage());}
-     return GeneralResponse.builder()
          .status(false)
          .message("fail to create user")
          .data(null)
          .build();
-
-
     }
+
 }

@@ -1,13 +1,12 @@
 package kr.snailemail.snailemail.controller;
 
-import kr.snailemail.snailemail.entity.GeneralResponse;
+import kr.snailemail.snailemail.dto.GeneralResponse;
+import kr.snailemail.snailemail.dto.SignUpUserDto;
 import kr.snailemail.snailemail.service.CognitoUserService;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RestController
 public class AuthController {
 
@@ -19,8 +18,12 @@ public class AuthController {
 
     @GetMapping("")
     public GeneralResponse<?> getUsers() {
-        return GeneralResponse.builder()
-            .status(true).message("").data(null).build();
+        return userService.getUsers();
+    }
+
+    @PostMapping("")
+    public GeneralResponse<?> registerUser(@RequestBody SignUpUserDto request) {
+        return userService.registerUser(request);
     }
 }
     
