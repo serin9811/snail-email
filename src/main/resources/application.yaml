@@ -1,4 +1,15 @@
+server:
+  servlet:
+    context-path: /api
+
+aws:
+  cognito:
+    userPoolId: ap-northeast-2_YaKUHlVpc
+    appClientId: 5gur124q0jk0rbddvikqcmdrka
+
 spring:
+  profiles:
+    active: local
   datasource:
     url: jdbc:h2:tcp://localhost/~/snail-email  
     driver-class-name: org.h2.Driver
@@ -11,10 +22,3 @@ spring:
       settings:
         web-allow-others: true
       enabled: true
-server:
-  servlet:
-    context-path: /api
-
-aws:
-  cognito: 
-    userPoolId: ap-northeast-2_oHQACM2Pm

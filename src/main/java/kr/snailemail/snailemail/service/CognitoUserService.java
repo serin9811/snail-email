@@ -1,5 +1,6 @@
 package kr.snailemail.snailemail.service;
 
+import kr.snailemail.snailemail.dto.SignInUserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +10,7 @@ import kr.snailemail.snailemail.repository.UserRepository;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserResponse;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.CognitoIdentityProviderException;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.ListUsersResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
 @Service
 public class CognitoUserService {
@@ -23,6 +19,9 @@ public class CognitoUserService {
 
     @Value("${aws.cognito.userPoolId}")
     private String userPoolId;
+
+    @Value("${aws.cognito.appClientId}")
+    private String appClientId;
 
     /*
     public CognitoUserService(UserRepository userRepository) {
@@ -93,4 +92,30 @@ public class CognitoUserService {
          .build();
     }
 
+    public GeneralResponse<?> signInUser(SignInUserDto request) {
+        try {
+            AdminInitiateAuthRequest req = AdminInitiateAuthRequest.builder()
+                    .userPoolId(userPoolId)
+                    .authFlow("USER_PASSWORD_AUTH")
+                    .clientId(appClientId)
+                    .build();
+
+            AdminInitiateAuthResponse res = cognitoClient.adminInitiateAuth(req);
+            System.out.println("accessToken => " + res.authenticationResult().accessToken());
+
+            return GeneralResponse.builder()
+                    .status(true)
+                    .message("success")
+                    .data(res.authenticationResult().accessToken())
+                    .build();
+        } catch (CognitoIdentityProviderException e) {
+            System.err.println(e.awsErrorDetails().errorMessage());
+        }
+
+        return GeneralResponse.builder()
+                .status(false)
+                .message("failed authentication")
+                .data(null)
+                .build();
+    }
 }

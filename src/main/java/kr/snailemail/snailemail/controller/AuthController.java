@@ -1,6 +1,7 @@
 package kr.snailemail.snailemail.controller;
 
 import kr.snailemail.snailemail.dto.GeneralResponse;
+import kr.snailemail.snailemail.dto.SignInUserDto;
 import kr.snailemail.snailemail.dto.SignUpUserDto;
 import kr.snailemail.snailemail.service.CognitoUserService;
 
@@ -24,6 +25,12 @@ public class AuthController {
     @PostMapping("")
     public GeneralResponse<?> registerUser(@RequestBody SignUpUserDto request) {
         return userService.registerUser(request);
+    }
+
+    @PostMapping("/login")
+    public GeneralResponse<?> signInUser(@RequestBody SignInUserDto request) {
+        return userService.signInUser(request);
+
     }
 }
     
