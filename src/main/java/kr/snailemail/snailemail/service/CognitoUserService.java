@@ -20,19 +20,10 @@ import java.util.Map;
 @Service
 public class CognitoUserService {
 
-    //private UserRepository userRepository;
-
     @Value("${aws.cognito.userPoolId}")
     private String userPoolId;
-
     @Value("${aws.cognito.appClientId}")
     private String appClientId;
-
-    /*
-    public CognitoUserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-     */
     
     CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
         .region(Region.AP_NORTHEAST_2)
@@ -132,6 +123,30 @@ public class CognitoUserService {
         return GeneralResponse.builder()
                 .status(false)
                 .message("failed authentication")
+                .data(null)
+                .build();
+    }
+
+    public GeneralResponse<?> signOutUser(String accessToken) {
+        try {
+            GlobalSignOutRequest req = GlobalSignOutRequest.builder()
+                    .accessToken(accessToken)
+                    .build();
+
+            cognitoClient.globalSignOut(req);
+
+            return GeneralResponse.builder()
+                    .status(true)
+                    .message("success")
+                    .data(null)
+                    .build();
+
+        } catch (CognitoIdentityProviderException e) {
+            System.err.println(e.awsErrorDetails().errorMessage());
+        }
+        return GeneralResponse.builder()
+                .status(false)
+                .message("failed to log out")
                 .data(null)
                 .build();
     }
