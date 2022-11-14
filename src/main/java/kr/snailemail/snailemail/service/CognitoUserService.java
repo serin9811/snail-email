@@ -12,6 +12,11 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class CognitoUserService {
 
@@ -27,7 +32,6 @@ public class CognitoUserService {
     public CognitoUserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
      */
     
     CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
@@ -37,17 +41,22 @@ public class CognitoUserService {
 
     public GeneralResponse<?> getUsers() {
         try {
-             ListUsersRequest request = ListUsersRequest.builder().userPoolId(userPoolId).build();
+            ListUsersRequest request = ListUsersRequest.builder().userPoolId(userPoolId).build();
 
-             ListUsersResponse response = cognitoClient.listUsers(request);
+            ListUsersResponse response = cognitoClient.listUsers(request);
+            Map<String, String> usersAttr = new HashMap<>();
+            response.users().forEach(user ->
+            {System.out.println("username : " + user.username());
+                usersAttr.put("username", user.username());
+            });
+            List<Map<String, String>> list = new ArrayList<>();
+            list.add(usersAttr);
 
-             response.users().forEach(user -> {System.out.println("user : " + user.username());
-             });
 
              return GeneralResponse.builder()
                  .status(true)
                  .message("success")
-                 .data(response.users().toArray())
+                 .data(list)
                  .build();
 
         } catch (CognitoIdentityProviderException e) {
@@ -62,25 +71,33 @@ public class CognitoUserService {
     
     public GeneralResponse<?> registerUser(SignUpUserDto request) {
         try {
-            AttributeType attributeType = AttributeType.builder()
+            AttributeType emailAttr = AttributeType.builder()
                     .name("email")
                     .value(request.getUserEmail())
                     .build();
 
-            AdminCreateUserRequest req = AdminCreateUserRequest.builder()
-                    .userPoolId(userPoolId)
-                    .username(request.getUserEmail())
-                    .userAttributes(attributeType)
-                    .messageAction("SUPPRESS")
+            AttributeType nameAttr = AttributeType.builder()
+                    .name("name")
+                    .value(request.getUserEmail())
                     .build();
 
-            AdminCreateUserResponse res = cognitoClient.adminCreateUser(req);
-            System.out.println("user : " + res.user().username());
+            List<AttributeType> li = new ArrayList<>();
+            li.add(emailAttr);
+            li.add(nameAttr);
+
+            SignUpRequest req = SignUpRequest.builder()
+                    .clientId(appClientId)
+                    .username(request.getUserEmail())
+                    .password(request.getPassword())
+                    .userAttributes(li)
+                    .build();
+
+            SignUpResponse res = cognitoClient.signUp(req);
 
             return GeneralResponse.builder()
                 .status(true)
                 .message("success")
-                .data(res.user().username())
+                .data(null)
                 .build();
         } catch (CognitoIdentityProviderException e) {
             System.err.println(e.awsErrorDetails().errorMessage());}

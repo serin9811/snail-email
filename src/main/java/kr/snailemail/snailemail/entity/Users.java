@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Getter
-@Table(name = "users")
+@Table(name = "Users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Users {

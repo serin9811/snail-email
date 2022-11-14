@@ -12,11 +12,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "emails")
+@Table(name = "Emails")
 @Entity
 public class Emails {
 
     @Id
+    @Column(name = "emailId")
     private Long emailId;
 
     @Column(name = "email_sender_id")

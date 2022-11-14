@@ -11,9 +11,11 @@ import lombok.Setter;
 public class SignUpUserDto {
 
     private String userEmail;
+    private String password;
     
     @Builder
-    public SignUpUserDto(String userEmail) {
+    public SignUpUserDto(String userEmail, String password) {
         this.userEmail = userEmail;
+        this.password = password;
     }
 }
