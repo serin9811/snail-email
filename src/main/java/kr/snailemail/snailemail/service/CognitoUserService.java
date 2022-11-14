@@ -1,12 +1,13 @@
 package kr.snailemail.snailemail.service;
 
+import kr.snailemail.snailemail.dto.ConfirmCodeDto;
 import kr.snailemail.snailemail.dto.SignInUserDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import kr.snailemail.snailemail.dto.GeneralResponse;
 import kr.snailemail.snailemail.dto.SignUpUserDto;
-import kr.snailemail.snailemail.repository.UserRepository;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class CognitoUserService {
 
@@ -83,16 +85,16 @@ public class CognitoUserService {
                     .userAttributes(li)
                     .build();
 
-            SignUpResponse res = cognitoClient.signUp(req);
+            cognitoClient.signUp(req);
 
             return GeneralResponse.builder()
                 .status(true)
                 .message("success")
-                .data(null)
+                .data(request.getUserEmail())
                 .build();
         } catch (CognitoIdentityProviderException e) {
-            System.err.println(e.awsErrorDetails().errorMessage());}
-
+            System.err.println(e.awsErrorDetails().errorMessage());
+        }
         return GeneralResponse.builder()
          .status(false)
          .message("fail to create user")
@@ -102,14 +104,19 @@ public class CognitoUserService {
 
     public GeneralResponse<?> signInUser(SignInUserDto request) {
         try {
+            Map<String, String> authParams = new HashMap<>();
+            authParams.put("USERNAME", request.getUserEmail());
+            authParams.put("PASSWORD", request.getPassword());
+
             AdminInitiateAuthRequest req = AdminInitiateAuthRequest.builder()
                     .userPoolId(userPoolId)
-                    .authFlow("USER_PASSWORD_AUTH")
+                    .authFlow("ADMIN_NO_SRP_AUTH")
+                    .authParameters(authParams)
                     .clientId(appClientId)
                     .build();
 
             AdminInitiateAuthResponse res = cognitoClient.adminInitiateAuth(req);
-            System.out.println("accessToken => " + res.authenticationResult().accessToken());
+            log.info("accessToken => " + res.authenticationResult().accessToken());
 
             return GeneralResponse.builder()
                     .status(true)
@@ -118,13 +125,13 @@ public class CognitoUserService {
                     .build();
         } catch (CognitoIdentityProviderException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
+            return GeneralResponse.builder()
+                    .status(false)
+                    .message(e.awsErrorDetails().errorMessage())
+                    .data(null)
+                    .build();
         }
 
-        return GeneralResponse.builder()
-                .status(false)
-                .message("failed authentication")
-                .data(null)
-                .build();
     }
 
     public GeneralResponse<?> signOutUser(String accessToken) {
@@ -133,8 +140,8 @@ public class CognitoUserService {
                     .accessToken(accessToken)
                     .build();
 
-            cognitoClient.globalSignOut(req);
-
+            GlobalSignOutResponse res = cognitoClient.globalSignOut(req);
+            log.info(res.sdkHttpResponse().toString());
             return GeneralResponse.builder()
                     .status(true)
                     .message("success")
@@ -143,11 +150,36 @@ public class CognitoUserService {
 
         } catch (CognitoIdentityProviderException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
+            return GeneralResponse.builder()
+                    .status(false)
+                    .message(e.awsErrorDetails().errorMessage())
+                    .data(null)
+                    .build();
         }
-        return GeneralResponse.builder()
-                .status(false)
-                .message("failed to log out")
-                .data(null)
-                .build();
+    }
+
+    public GeneralResponse<?> confirmSignUp(ConfirmCodeDto request) {
+        try {
+            ConfirmSignUpRequest req = ConfirmSignUpRequest.builder()
+                    .clientId(appClientId)
+                    .username(request.getUserEmail())
+                    .confirmationCode(request.getCode())
+                    .build();
+
+            ConfirmSignUpResponse res = cognitoClient.confirmSignUp(req);
+            log.info(res.sdkHttpResponse().toString());
+            return GeneralResponse.builder()
+                    .status(true)
+                    .message("success")
+                    .data(null)
+                    .build();
+        } catch (CognitoIdentityProviderException e) {
+            System.err.println(e.awsErrorDetails().errorMessage());
+            return GeneralResponse.builder()
+                    .status(false)
+                    .message(e.awsErrorDetails().errorMessage())
+                    .data(null)
+                    .build();
+        }
     }
 }

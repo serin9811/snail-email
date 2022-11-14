@@ -1,15 +1,11 @@
 package kr.snailemail.snailemail.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class SignInUserDto {
-
+public class ConfirmCodeDto {
     private String userEmail;
-    private String password;
-
+    private String code;
 }
