@@ -4,6 +4,7 @@ import kr.snailemail.snailemail.dto.ConfirmCodeDto;
 import kr.snailemail.snailemail.dto.GeneralResponse;
 import kr.snailemail.snailemail.dto.SignInUserDto;
 import kr.snailemail.snailemail.service.CognitoUserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    public GeneralResponse<?> signInUser(@RequestBody SignInUserDto request) {
+    public ResponseEntity<GeneralResponse> signInUser(@RequestBody SignInUserDto request) {
         return userService.signInUser(request);
     }
 

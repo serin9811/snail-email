@@ -2,8 +2,11 @@ package kr.snailemail.snailemail.service;
 
 import kr.snailemail.snailemail.dto.ConfirmCodeDto;
 import kr.snailemail.snailemail.dto.SignInUserDto;
+import kr.snailemail.snailemail.exception.CognitoUserException;
+import kr.snailemail.snailemail.exception.CustomError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import kr.snailemail.snailemail.dto.GeneralResponse;
@@ -102,7 +105,7 @@ public class CognitoUserService {
          .build();
     }
 
-    public GeneralResponse<?> signInUser(SignInUserDto request) {
+    public ResponseEntity<GeneralResponse> signInUser(SignInUserDto request) {
         try {
             Map<String, String> authParams = new HashMap<>();
             authParams.put("USERNAME", request.getUserEmail());
@@ -118,20 +121,16 @@ public class CognitoUserService {
             AdminInitiateAuthResponse res = cognitoClient.adminInitiateAuth(req);
             log.info("accessToken => " + res.authenticationResult().accessToken());
 
-            return GeneralResponse.builder()
-                    .status(true)
-                    .message("success")
-                    .data(res.authenticationResult().accessToken())
-                    .build();
+            return ResponseEntity.ok().body(
+                    GeneralResponse.builder()
+                            .status(true)
+                            .message("success")
+                            .data(res.authenticationResult().accessToken())
+                            .build()
+            );
         } catch (CognitoIdentityProviderException e) {
-            System.err.println(e.awsErrorDetails().errorMessage());
-            return GeneralResponse.builder()
-                    .status(false)
-                    .message(e.awsErrorDetails().errorMessage())
-                    .data(null)
-                    .build();
+            throw new CognitoUserException(new CustomError(e.statusCode(), e.awsErrorDetails().errorMessage(), null));
         }
-
     }
 
     public GeneralResponse<?> signOutUser(String accessToken) {
