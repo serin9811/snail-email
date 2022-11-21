@@ -33,4 +33,5 @@ public class AuthController {
     public GeneralResponse<?> confirmSignUp(@RequestBody ConfirmCodeDto request) {
         return userService.confirmSignUp(request);
     }
+
 }
