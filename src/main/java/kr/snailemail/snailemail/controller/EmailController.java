@@ -18,9 +18,9 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<GeneralResponse> getEmails(@PathVariable String userId) {
-        return emailService.getEmails(userId);
+    @GetMapping("/{userEmail}")
+    public ResponseEntity<GeneralResponse> getEmails(@PathVariable String userEmail) {
+        return emailService.getEmails(userEmail);
     }
 
 }
