@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionAdvice {
 
     @ExceptionHandler({CognitoUserException.class})
-    ResponseEntity<CustomError> cognitoExceptionHandler(CognitoUserException ex) {
+    ResponseEntity<ErrorResponse> cognitoExceptionHandler(CognitoUserException ex) {
         log.error(ex.getMessage());
         CustomError customError = ex.getCustomError();
         ErrorResponse errorResponse = ErrorResponse.builder()

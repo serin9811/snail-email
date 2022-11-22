@@ -50,7 +50,7 @@ public class CognitoUserService {
 
 
              return GeneralResponse.builder()
-                 .status(true)
+                 .status(200)
                  .message("success")
                  .data(list)
                  .build();
@@ -59,7 +59,7 @@ public class CognitoUserService {
             System.err.println(e.awsErrorDetails().errorMessage());
         }
         return GeneralResponse.builder()
-            .status(false)
+            .status(500)
             .message("fail to get user list")
             .data(null)
             .build();
@@ -91,7 +91,7 @@ public class CognitoUserService {
             cognitoClient.signUp(req);
 
             return GeneralResponse.builder()
-                .status(true)
+                .status(200)
                 .message("success")
                 .data(request.getUserEmail())
                 .build();
@@ -99,7 +99,7 @@ public class CognitoUserService {
             System.err.println(e.awsErrorDetails().errorMessage());
         }
         return GeneralResponse.builder()
-         .status(false)
+         .status(500)
          .message("fail to create user")
          .data(null)
          .build();
@@ -123,7 +123,7 @@ public class CognitoUserService {
 
             return ResponseEntity.ok().body(
                     GeneralResponse.builder()
-                            .status(true)
+                            .status(200)
                             .message("success")
                             .data(res.authenticationResult().accessToken())
                             .build()
@@ -142,7 +142,7 @@ public class CognitoUserService {
             GlobalSignOutResponse res = cognitoClient.globalSignOut(req);
             log.info(res.sdkHttpResponse().toString());
             return GeneralResponse.builder()
-                    .status(true)
+                    .status(200)
                     .message("success")
                     .data(null)
                     .build();
@@ -150,7 +150,7 @@ public class CognitoUserService {
         } catch (CognitoIdentityProviderException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
             return GeneralResponse.builder()
-                    .status(false)
+                    .status(500)
                     .message(e.awsErrorDetails().errorMessage())
                     .data(null)
                     .build();
@@ -168,14 +168,14 @@ public class CognitoUserService {
             ConfirmSignUpResponse res = cognitoClient.confirmSignUp(req);
             log.info(res.sdkHttpResponse().toString());
             return GeneralResponse.builder()
-                    .status(true)
+                    .status(200)
                     .message("success")
                     .data(null)
                     .build();
         } catch (CognitoIdentityProviderException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
             return GeneralResponse.builder()
-                    .status(false)
+                    .status(500)
                     .message(e.awsErrorDetails().errorMessage())
                     .data(null)
                     .build();

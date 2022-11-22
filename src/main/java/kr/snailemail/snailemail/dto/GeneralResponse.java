@@ -9,12 +9,12 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class GeneralResponse <T> {
-    private boolean status;
+    private int status;
     private String message;
     private T data;
     
     @Builder
-    GeneralResponse (boolean status, String message, T data) {
+    GeneralResponse (int status, String message, T data) {
         this.status = status;
         this.message = message;
         this.data = data;
