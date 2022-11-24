@@ -1,8 +1,8 @@
 package kr.snailemail.snailemail.controller;
 
-import kr.snailemail.snailemail.dto.ConfirmCodeDto;
-import kr.snailemail.snailemail.dto.GeneralResponse;
-import kr.snailemail.snailemail.dto.SignInUserDto;
+import kr.snailemail.snailemail.model.dto.ConfirmCodeDto;
+import kr.snailemail.snailemail.model.dto.GeneralResponse;
+import kr.snailemail.snailemail.model.dto.SignInUserDto;
 import kr.snailemail.snailemail.service.CognitoUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

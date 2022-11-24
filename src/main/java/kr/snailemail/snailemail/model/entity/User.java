@@ -1,9 +1,8 @@
-package kr.snailemail.snailemail.entity;
+package kr.snailemail.snailemail.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import kr.snailemail.snailemail.model.dto.UserDto;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@ToString
 @Table(name = "Users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -43,8 +43,24 @@ public class User {
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<Email> emails = new ArrayList<>();
 
+    @Builder
+    public User(Long userId, String userEmailAddr, LocalDateTime joinDate, LocalDateTime updateDate) {
+        this.userId = userId;
+        this.userEmailAddr = userEmailAddr;
+        this.joinDate = joinDate;
+        this.updateDate = updateDate;
+    }
+
+    public UserDto toUserDto() {
+        return UserDto.builder()
+                .userId(userId)
+                .userEmailAddr(userEmailAddr)
+                .joinDate(joinDate)
+                .updateDate(updateDate)
+                .build();
+    }
 }

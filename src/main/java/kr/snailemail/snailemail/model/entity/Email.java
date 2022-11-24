@@ -1,5 +1,6 @@
-package kr.snailemail.snailemail.entity;
+package kr.snailemail.snailemail.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class Email {
     private Long emailId;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
 

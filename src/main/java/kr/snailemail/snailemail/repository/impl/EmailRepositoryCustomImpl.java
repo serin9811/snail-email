@@ -1,7 +1,7 @@
 package kr.snailemail.snailemail.repository.impl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import kr.snailemail.snailemail.entity.Email;
+import kr.snailemail.snailemail.model.entity.Email;
 import kr.snailemail.snailemail.entity.QEmail;
 import kr.snailemail.snailemail.repository.EmailRepositoryCustom;
 

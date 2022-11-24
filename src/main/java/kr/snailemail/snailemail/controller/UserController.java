@@ -1,8 +1,7 @@
 package kr.snailemail.snailemail.controller;
 
-import kr.snailemail.snailemail.dto.GeneralResponse;
-import kr.snailemail.snailemail.dto.SignInUserDto;
-import kr.snailemail.snailemail.dto.SignUpUserDto;
+import kr.snailemail.snailemail.model.dto.GeneralResponse;
+import kr.snailemail.snailemail.model.dto.SignUpUserDto;
 import kr.snailemail.snailemail.service.CognitoUserService;
 
 import org.springframework.web.bind.annotation.*;

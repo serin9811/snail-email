@@ -1,7 +1,7 @@
 package kr.snailemail.snailemail.service;
 
-import kr.snailemail.snailemail.dto.GeneralResponse;
-import kr.snailemail.snailemail.entity.Email;
+import kr.snailemail.snailemail.model.dto.GeneralResponse;
+import kr.snailemail.snailemail.model.entity.Email;
 import kr.snailemail.snailemail.repository.EmailRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

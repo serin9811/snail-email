@@ -1,6 +1,6 @@
 package kr.snailemail.snailemail.repository;
 
-import kr.snailemail.snailemail.entity.User;
+import kr.snailemail.snailemail.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
