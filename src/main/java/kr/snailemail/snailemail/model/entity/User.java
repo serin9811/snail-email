@@ -32,8 +32,8 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "user_email_addr")
-    private String userEmailAddr;
+    @Column(name = "email_addr")
+    private String emailAddr;
 
     @CreatedDate
     @Column(name = "join_date")
@@ -48,9 +48,9 @@ public class User {
     private List<Email> emails = new ArrayList<>();
 
     @Builder
-    public User(Long userId, String userEmailAddr, LocalDateTime joinDate, LocalDateTime updateDate) {
+    public User(Long userId, String emailAddr, LocalDateTime joinDate, LocalDateTime updateDate) {
         this.userId = userId;
-        this.userEmailAddr = userEmailAddr;
+        this.emailAddr = emailAddr;
         this.joinDate = joinDate;
         this.updateDate = updateDate;
     }
@@ -58,7 +58,7 @@ public class User {
     public UserDto toUserDto() {
         return UserDto.builder()
                 .userId(userId)
-                .userEmailAddr(userEmailAddr)
+                .emailAddr(emailAddr)
                 .joinDate(joinDate)
                 .updateDate(updateDate)
                 .build();

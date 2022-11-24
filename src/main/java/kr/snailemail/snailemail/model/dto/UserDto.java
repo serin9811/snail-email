@@ -15,14 +15,14 @@ import java.time.LocalDateTime;
 public class UserDto {
 
     private Long userId;
-    private String userEmailAddr;
+    private String emailAddr;
     private LocalDateTime joinDate;
     private LocalDateTime updateDate;
 
     public User toEntity() {
         return User.builder()
                 .userId(userId)
-                .userEmailAddr(userEmailAddr)
+                .emailAddr(emailAddr)
                 .joinDate(joinDate)
                 .updateDate(updateDate)
                 .build();

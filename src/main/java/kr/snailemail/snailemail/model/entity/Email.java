@@ -1,9 +1,7 @@
 package kr.snailemail.snailemail.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -11,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
+@ToString(exclude = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Emails")
 @Entity
@@ -49,5 +48,19 @@ public class Email {
 
     @Column(name = "send_yn")
     private boolean sendYn;
+
+    @Builder
+    public Email(Long emailId, User user, String emailTitle, String emailContent, LocalDateTime sendDate, boolean sendYn) {
+        this.emailId = emailId;
+        this.user = user;
+        this.emailTitle = emailTitle;
+        this.emailContent = emailContent;
+        this.sendDate = sendDate;
+        this.sendYn = sendYn;
+    }
+
+    public void updateEmailSender(User user) {
+        this.user = user;
+    }
 
 }
